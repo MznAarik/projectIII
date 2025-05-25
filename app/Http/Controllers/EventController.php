@@ -40,7 +40,7 @@ class EventController extends Controller
             $events->venue = $request['venue'];
             $events->capacity = $request['capacity'];
             $events->ticket_price = $request['ticket_price'];
-            $events->description = $request['decription'];
+            $events->description = $request['description'];
             $events->contact_info = $request['contact_info'];
             $events->start_date = $request['start_date'];
             $events->end_date = $request['end_date'];
