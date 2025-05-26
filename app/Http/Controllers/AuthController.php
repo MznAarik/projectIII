@@ -68,6 +68,14 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $checkUser = User::where('email',$request->email )->where('delete_flag',0)->first();
+        if(!$checkUser){
+            return redirect()->route('home')->with([
+                'status' => 0,
+                'error' => 'User not found. Please register first.',
+            ]);
+        }
+        
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -82,10 +90,12 @@ class AuthController extends Controller
                     'message' => 'Please verify your email first.',
                 ]);
             }
-
+            
             $request->session()->regenerate();
+            
 
-            if ($user->role === 'admin') {
+            $checkRole = $request->role;
+            if ($user->role === 'admin' && $checkRole === 'admin') {
                 return redirect()->route('admin.dashboard')->with([
                     'status' => 1,
                     'message' => 'Welcome ' . $user->name . '!',
@@ -96,7 +106,7 @@ class AuthController extends Controller
                     'message' => 'Welcome ' . $user->name . '!',
                 ]);
             } else {
-                return redirect()->route('login.submit');
+                abort(403, 'Unauthorized action.');
             }
         }
 
