@@ -95,7 +95,7 @@ class AuthController extends Controller
             
 
             $checkRole = $request->role;
-            if ($user->role === 'admin'  && $checkRole) {
+            if ($user->role === 'admin' && $checkRole === 'admin') {
                 return redirect()->route('admin.dashboard')->with([
                     'status' => 1,
                     'message' => 'Welcome ' . $user->name . '!',
