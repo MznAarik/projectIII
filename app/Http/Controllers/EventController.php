@@ -33,11 +33,12 @@ class EventController extends Controller
     public function store(EventsValidate $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $events = new Event();
             $events->name = strtolower($request['name']);
             $events->venue = $request['venue'];
+            $events->location = $request['location'];
             $events->capacity = $request['capacity'];
             $events->ticket_price = $request['ticket_price'];
             $events->description = $request['description'];
@@ -59,8 +60,8 @@ class EventController extends Controller
             $events->currency = $request['currency'];
             $events->created_by = Auth::id();
             $events->updated_by = Auth::id();
-            $events->save();
-
+            // $events->save();
+            
             DB::commit();
 
             return redirect()->route('events.index')->with([
@@ -73,7 +74,7 @@ class EventController extends Controller
             DB::rollBack();
             Log::error('Event creation failed: ' . $e->getMessage());
 
-            return redirect()->route('events.index')->with([
+            return redirect()->with([
                 'status' => 0,
                 'message' => 'Error Occured! Please try again',
                 'error' => $e->getMessage(),
