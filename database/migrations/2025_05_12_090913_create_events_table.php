@@ -14,6 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50);
             $table->string('location');
+            $table->unsignedBigInteger('district_id');
+            $table->foreign('district_id')->references('id')->on('districts')->onDelete('set null');
+            $table->unsignedBigInteger('province_id');
+            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('set null');
+            $table->unsignedBigInteger('country_id');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->string('venue', 100);
             $table->integer('capacity');
             $table->decimal('ticket_price', 6, 2)->nullable(false);

@@ -21,8 +21,9 @@ return new class extends Migration {
             $table->string('address');
             $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('province_id')->nullable();
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->index(['district_id', 'province_id']);
+            $table->index(['district_id', 'province_id','country_id'], 'location_index');
             $table->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
