@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventsValidate;
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,14 +15,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        // if (!Auth::check()) {
-        //     return redirect()->route('home')->with([
-        //         'status' => 0,
-        //         'message' => 'Please login to access this page.',
-        //     ]);
-        // }
         $events = Event::all();
-        return view('admin.dashboard', compact('events'));
+        return view('admin.events.index', compact('events'));
     }
 
     /**
@@ -30,19 +24,19 @@ class EventController extends Controller
      */
     public function create()
     {
-
+        return view('admin.events.createEvents');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EventsValidate $request)
     {
         DB::beginTransaction();
 
         try {
             $events = new Event();
-            $events->event_name = strtolower($request['name']);
+            $events->name = strtolower($request['name']);
             $events->venue = $request['venue'];
             $events->capacity = $request['capacity'];
             $events->ticket_price = $request['ticket_price'];
@@ -53,7 +47,14 @@ class EventController extends Controller
             $events->category = $request['category'];
             $events->status = $request['status'];
             $events->organizer = $request['organizer'];
-            $events->image_url = $request['image_url'];
+            
+            if($request->has('image')){
+                $file = $request->file('image');
+                $imageName=time().'.'.$file->getClientOriginalExtension();
+                $img_path=$file->storeAs('images/events', $imageName, 'public');
+                $events->img_path=$img_path;
+            }
+            
             $events->tickets_sold = $request['tickets_sold'];
             $events->currency = $request['currency'];
             $events->created_by = Auth::id();
@@ -62,7 +63,7 @@ class EventController extends Controller
 
             DB::commit();
 
-            return response()->json([
+            return redirect()->route('events.index')->with([
                 'status' => 1,
                 'message' => 'Event created successfully',
             ]);
@@ -72,7 +73,7 @@ class EventController extends Controller
             DB::rollBack();
             Log::error('Event creation failed: ' . $e->getMessage());
 
-            return redirect()->route('home')->with([
+            return redirect()->route('events.index')->with([
                 'status' => 0,
                 'message' => 'Error Occured! Please try again',
                 'error' => $e->getMessage(),
@@ -85,7 +86,8 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $event=Event::findOrFail($id);
+        return view('admin.events.showEvents', compact('event'));
     }
 
     /**
@@ -93,15 +95,32 @@ class EventController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $event = Event::findOrFail($id);
+        return view('admin.events.createEvents', compact('event'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EventsValidate $request, string $id)
     {
-        //
+        try {
+            $event = Event::findOrFail($id);
+            $event->update($request->validated());
+
+            return redirect()->route('events.index')->with([
+                'status' => 1,
+                'message' => 'Event updated successfully',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Event update failed: ' . $e->getMessage());
+
+            return redirect()->route('events.index')->with([
+                'status' => 0,
+                'message' => 'Error Occured! Please try again',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -109,6 +128,20 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try{
+            $event=Event::findOrFail($id);
+            $event->delete();
+            return redirect()->route('events.index')->with([
+                'status'=>1,
+                'message'=>'Event deleted successfully',
+            ]);
+        }catch(\Exception $e){
+            Log::error('Event deletion failed: '.$e->getMessage());
+            return redirect()->route('events.index')->with([
+            'status'=>0,
+                'message'=>'Error Occured! Please try again',
+                'error'=>$e->getMessage(),
+            ]);
+        }
     }
 }

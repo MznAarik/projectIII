@@ -10,4 +10,6 @@ class AdminController extends Controller
     {
         return view('admin.dashboard', ['message' => 'Welcome to the Admin Dashboard']);
     }
+
+
 }

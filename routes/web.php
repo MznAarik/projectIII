@@ -36,13 +36,19 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/upcomings', [AdminController::class, 'upcoming'])->name('admin.upcoming');
 });
 
 Route::prefix('tickets')->group(function () {
-    Route::get('/index', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('index', [TicketController::class, 'index'])->name('tickets.index');
 });
 
 Route::prefix('events')->middleware('role:admin')->group(function () {
-    Route::get('index', [EventController::class, 'index'])->name('event.index');
-    Route::post('store', [EventController::class, 'store'])->name('event.store');
+    Route::get('/', [EventController::class, 'index'])->name('events.index');
+    Route::get('create', [EventController::class, 'create'])->name('events.create');
+    Route::post('store', [EventController::class, 'store'])->name('events.store');
+    Route::get('show/{id}', [EventController::class, 'show'])->name('events.show');
+    Route::get('{id}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::put('update/{id}', [EventController::class, 'update'])->name('events.update');
+    Route::delete('destroy/{id}', [EventController::class, 'destroy'])->name('events.destroy');
 });

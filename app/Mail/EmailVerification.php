@@ -48,7 +48,7 @@ class EmailVerification extends Mailable
             view: 'email.EmailVerification',
             with: [
                 'data' => $this->data,
-                'imageUrl' => asset('storage/images/email.png'), // Ensure image is in public/images
+                // 'imageUrl' => asset('storage/images/email.png'), // Ensure image is in public/images
             ]
         );
     }
