@@ -17,13 +17,13 @@ return new class extends Migration {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade');
+                ->onDelete('set null');
 
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade');
+                ->onDelete('set null');
 
             $table->string('status', 20)->nullable()->default('Pending');
             $table->unsignedBigInteger('quantity')->nullable()->default(1);
