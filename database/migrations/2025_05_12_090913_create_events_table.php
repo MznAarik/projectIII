@@ -27,7 +27,6 @@ return new class extends Migration {
             $table->string('img_path', 255)->nullable();
             $table->integer('tickets_sold')->nullable()->default(0);
             $table->string('currency', 10)->default('NPR')->nullable();
-            $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('district_id')->nullable();
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('set null');
             $table->unsignedBigInteger('province_id')->nullable();
