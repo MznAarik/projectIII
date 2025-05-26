@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>Add Events</h1>
+    <h1>Add Events </h1>
     <form action="{{ route('events.store') }}" method="POST">
         @csrf
         <div>
