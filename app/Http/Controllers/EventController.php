@@ -39,9 +39,9 @@ class EventController extends Controller
             $events->name = strtolower($request['name']);
             $events->venue = $request['venue'];
             $events->location=$request['location'];
-            $events->district_id = $request['district_id'];
-            $events->province_id=$request['province_id'];
-            $events->country_id = $request['country_id'];
+            $events->district = $request['district'];
+            $events->province = $request['province'];
+            $events->country = $request['country'];
             $events->capacity = $request['capacity'];
             $events->ticket_price = $request['ticket_price'];
             $events->description = $request['description'];
