@@ -19,11 +19,11 @@ return new class extends Migration {
             $table->enum('gender', ['male', 'female', 'other'])->default('male');
             $table->string('phoneno');
             $table->string('address');
-            $table->unsignedBigInteger('district_id')->nullable();
-            $table->unsignedBigInteger('province_id')->nullable();
-            $table->unsignedBigInteger('country_id')->nullable();
+            $table->string('district', 100)->nullable();
+            $table->string('province',100)->nullable();
+            $table->string('country',100)->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->index(['district_id', 'province_id','country_id'], 'location_index');
+            $table->index(['district', 'province','country'], 'location_index');
             $table->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
