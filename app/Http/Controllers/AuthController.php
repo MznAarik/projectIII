@@ -38,8 +38,9 @@ class AuthController extends Controller
                 'gender' => $request['gender'],
                 'phoneno' => $request['phoneno'],
                 'address' => $request['address'],
-                'district_id' => $request['district_id'],
-                'province_id' => $request['province_id'],
+                'district' => $request['district'],
+                'province' => $request['province'],
+                'country' => $request['country'],
                 'date_of_birth' => $request['date_of_birth'],
                 'role' => $request['role'],
             ]);
