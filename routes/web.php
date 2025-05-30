@@ -39,10 +39,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/upcomings', [AdminController::class, 'upcoming'])->name('admin.upcoming');
 });
 
-Route::prefix('tickets')->group(function () {
-    Route::get('index', [TicketController::class, 'index'])->name('tickets.index');
-});
-
 Route::prefix('events')->middleware('role:admin')->group(function () {
     Route::get('/', [EventController::class, 'index'])->name('events.index');
     Route::get('create', [EventController::class, 'create'])->name('events.create');
@@ -51,4 +47,20 @@ Route::prefix('events')->middleware('role:admin')->group(function () {
     Route::get('{id}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('update/{id}', [EventController::class, 'update'])->name('events.update');
     Route::delete('destroy/{id}', [EventController::class, 'destroy'])->name('events.destroy');
+});
+
+Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
+    Route::get('/tickets', [TicketController::class, 'index'])->name('user.tickets.index');
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('user.tickets.show');
+    Route::post('/tickets', [TicketController::class, 'store'])->name('user.tickets.store');
+    Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('user.tickets.update');
+    Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('user.tickets.destroy');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/tickets', [TicketController::class, 'adminIndex'])->name('admin.tickets.index');
+    Route::get('/tickets/create', [TicketController::class, 'create'])->name('admin.tickets.create');
+    Route::post('/tickets', [TicketController::class, 'store'])->name('admin.tickets.store');
+    Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('admin.tickets.update');
+    Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('admin.tickets.destroy');
 });
