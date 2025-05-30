@@ -24,7 +24,7 @@ class TicketController extends Controller
         // dd($tickets->count());
         $totalPrice = Auth::user()->tickets()->sum('total_price');
         $ticketStatus = Auth::user()->tickets()->pluck('status')->all();
-        dd($totalPrice, $ticketStatus);
+        // dd($totalPrice, $ticketStatus);
         return view('user.tickets.index', compact('tickets'));
 
     }
@@ -77,7 +77,7 @@ class TicketController extends Controller
                 ]);
             }
 
-            if ($request->quantity < $availableTickets) {
+            if ($request->quantity <= $availableTickets) {
                 $ticket = new Ticket();
                 $ticket->user_id = Auth::user()->id;
                 $ticket->event_id = $request->event_id;
@@ -91,16 +91,6 @@ class TicketController extends Controller
                 $ticket->updated_by = Auth::user()->id;
                 $ticket->save();
 
-                // // $qrData = route('user.tickets.show', $ticket->id);
-                // $response= json(['ticket_id' => $ticket->id, 'event_id' => $ticket->event_id]);
-                // $encryptedData = Crypt::encryptString($sensitiveData);
-
-                // $publicUrl = url('/');
-                // dd($publicUrl);
-                // $qrCode = QrCode::size(200)
-                //     ->format('png')
-                //     ->generate($qrData);
-                // dd($qrCode);
                 $ticket->qr_code = $this->generateQrCode($ticket->id, $ticket->event_id);
                 $ticket->save();
 
