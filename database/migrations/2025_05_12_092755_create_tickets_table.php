@@ -25,7 +25,7 @@ return new class extends Migration {
                 ->on('events')
                 ->onDelete('set null');
 
-            $table->string('status', 20)->nullable()->default('Pending');
+            $table->string('status', 20)->nullable()->default('pending');
             $table->decimal('price', 10, 2)->nullable();
             $table->unsignedBigInteger('quantity')->nullable()->default(1);
             $table->decimal('total_price', 10, 2)->nullable();

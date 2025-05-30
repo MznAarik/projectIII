@@ -34,4 +34,9 @@ class Event extends Model
     {
         return $this->belongsTo('App\Models\User', 'created_by');
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'event_id');
+    }
 }
